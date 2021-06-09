@@ -27,6 +27,12 @@ class TCPServer:
       with open("server_recv.txt", "wb") as f:
         f.write(request)
 
+      # クライアントへ送信するレスポンスデータを取得
+      with open("server_send.txt", "rb") as f:
+        response = f.read()
+
+      client_socket.send(response)
+
       # 通信を終了
       client_socket.close()
 
