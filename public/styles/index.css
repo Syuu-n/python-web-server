@@ -1,0 +1,13 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #4285f4;
+}
+
+img {
+  border-radius: 50%;
+}

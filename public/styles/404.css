@@ -1,0 +1,13 @@
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+h1 {
+  color: #f44242ab;
+}
+
+img {
+  border-radius: 50%;
+}
