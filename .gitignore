@@ -2,3 +2,4 @@ server_send.txt
 server_recv.txt
 client_send.txt
 client_recv.txt
+__pycache__
