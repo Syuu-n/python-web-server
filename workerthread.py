@@ -3,6 +3,7 @@ import os
 import re
 import textwrap
 import traceback
+import urllib.parse
 from threading import Thread
 from datetime import datetime
 from typing import Optional, Tuple
@@ -54,7 +55,7 @@ class WorkerThread(Thread):
           </html>
         """
         response_body = textwrap.dedent(html).encode()
-        content_type = "text/html"
+        content_type = "text/html; charset=UTF-8"
         response_line = "HTTP/1.1 200 OK\r\n"
       elif path == "/show_request":
         html = f"""\
@@ -72,8 +73,28 @@ class WorkerThread(Thread):
           </html>
         """
         response_body = textwrap.dedent(html).encode()
-        content_type = "text/html"
+        content_type = "text/html; charset=UTF-8"
         response_line = "HTTP/1.1 200 OK\r\n"
+      elif path == "/parameters":
+        if method == "GET":
+          not_allowed_file_path = os.path.join(self.STATIC_ROOT, "405.html")
+          with open(not_allowed_file_path, "rb") as f:
+            response_body = f.read()
+          content_type = "text/html; charset=UTF-8"
+          response_line = "HTTP/1.1 405 Method Not Allowed\r\n"
+        elif method == "POST":
+          post_params = urllib.parse.parse_qs(request_body.decode())
+          html = f"""\
+            <html>
+            <body>
+                <h1>Parameters:</h1>
+                <pre>{pformat(post_params)}</pre>                        
+            </body>
+            </html>
+          """
+          response_body = textwrap.dedent(html).encode()
+          content_type = "text/html; charset=UTF-8"
+          response_line = "HTTP/1.1 200 OK\r\n"
       else:
         try:
           response_body = self.get_static_file_content(path)
@@ -88,7 +109,7 @@ class WorkerThread(Thread):
           with open(not_found_file_path, "rb") as f:
             response_body = f.read()
           response_line = "HTTP/1.1 404 NotFound\r\n"
-          content_type = "text/html"
+          content_type = "text/html; charset=UTF-8"
 
       response_header = self.build_response_header(path, response_body, content_type)
 
